@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lemonade Stand Anarchy WebRing</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            text-align: center;
+            background: #f5f5f5;
+        }
+        .webring-container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin: 30px 0;
+        }
+        button {
+            padding: 12px 24px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background: #0066cc;
+            color: white;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background: #0052a3;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .info {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 5px;
+            font-size: 14px;
+            color: #666;
+        }
+        .error {
+            color: #cc0000;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        .member-count {
+            color: #666;
+            font-size: 14px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="webring-container">
+        <h1>🍋 Lemonade Stand Anarchy WebRing 🍋</h1>
+        <p class="subtitle">Navigate through the anarchy!</p>
+        
+        <div class="nav-buttons">
+            <button onclick="navigate('previous')" id="prevBtn">← Previous</button>
+            <button onclick="navigate('random')" id="randomBtn">🎲 Random</button>
+            <button onclick="navigate('next')" id="nextBtn">Next →</button>
+        </div>
+        
+        <div id="error" class="error" style="display: none;"></div>
+        
+        <div class="member-count" id="memberCount">Loading member count...</div>
+        
+        <div class="info">
+            <strong>What is a WebRing?</strong><br>
+            A webring is a collection of websites linked together in a circular structure.
+            Click the navigation buttons to explore other sites in the Lemonade Stand Anarchy community!
+        </div>
+    </div>
+
+    <script>
+        // CONFIGURATION - Update this with your deployed API URL
+        const API_URL = 'https://your-api-url.vercel.app';
+        const CURRENT_URL = window.location.href;
+
+        // Disable buttons during navigation
+        function setButtonsDisabled(disabled) {
+            document.getElementById('prevBtn').disabled = disabled;
+            document.getElementById('randomBtn').disabled = disabled;
+            document.getElementById('nextBtn').disabled = disabled;
+        }
+
+        // Show error message
+        function showError(message) {
+            const errorDiv = document.getElementById('error');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            setButtonsDisabled(false);
+        }
+
+        // Navigate to next/previous/random site
+        async function navigate(direction) {
+            setButtonsDisabled(true);
+            document.getElementById('error').style.display = 'none';
+            
+            try {
+                let url = `${API_URL}/${direction}`;
+                if (direction !== 'random') {
+                    url += `?current=${encodeURIComponent(CURRENT_URL)}`;
+                }
+                
+                const response = await fetch(url);
+                
+                if (!response.ok) {
+                    throw new Error(`API returned ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                if (data.url) {
+                    window.location.href = data.url;
+                } else {
+                    showError('No URL returned from API');
+                }
+            } catch (error) {
+                console.error('Navigation error:', error);
+                showError('Failed to navigate. Please try again.');
+            }
+        }
+
+        // Load member count
+        async function loadMemberCount() {
+            try {
+                const response = await fetch(`${API_URL}/list`);
+                const data = await response.json();
+                
+                if (data.count !== undefined) {
+                    document.getElementById('memberCount').textContent = 
+                        `This webring has ${data.count} member${data.count !== 1 ? 's' : ''}`;
+                }
+            } catch (error) {
+                console.error('Failed to load member count:', error);
+                document.getElementById('memberCount').textContent = '';
+            }
+        }
+
+        // Load member count on page load
+        loadMemberCount();
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') {
+                navigate('previous');
+            } else if (e.key === 'ArrowRight') {
+                navigate('next');
+            } else if (e.key === 'r' || e.key === 'R') {
+                navigate('random');
+            }
+        });
+    </script>
+</body>
+</html>
