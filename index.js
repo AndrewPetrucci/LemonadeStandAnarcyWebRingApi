@@ -2,6 +2,8 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const { google } = require('googleapis');
+const fs = require('fs');
+const path = require('path');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -9,6 +11,9 @@ const PORT = process.env.PORT || 3000;
 // Enable CORS for all routes
 app.use(cors());
 app.use(express.json());
+
+// Serve static pictures from the pictures directory
+app.use('/pictures', express.static(path.join(__dirname, 'pictures')));
 
 // In-memory cache for webring URLs
 let webringUrls = [];
@@ -31,7 +36,7 @@ async function fetchWebringUrls() {
 
     // Use API key authentication for public sheets
     const sheets = google.sheets({ version: 'v4', auth: process.env.GOOGLE_API_KEY });
-    
+
     const response = await sheets.spreadsheets.values.get({
       spreadsheetId: SPREADSHEET_ID,
       range: RANGE,
@@ -44,7 +49,7 @@ async function fetchWebringUrls() {
         .map(row => row[0])
         .filter(url => url && url.trim())
         .map(url => url.trim());
-      
+
       lastFetched = Date.now();
       console.log(`Fetched ${webringUrls.length} webring URLs from Google Sheets`);
     } else {
@@ -67,20 +72,20 @@ async function fetchWebringUrls() {
 app.get('/next', async (req, res) => {
   try {
     const currentUrl = req.query.current;
-    
+
     if (!currentUrl) {
       return res.status(400).json({ error: 'Missing required parameter: current' });
     }
 
     const urls = await fetchWebringUrls();
-    
+
     if (urls.length === 0) {
       return res.status(404).json({ error: 'No webring URLs available' });
     }
 
     // Find current URL in the list
     const currentIndex = urls.findIndex(url => url === currentUrl);
-    
+
     if (currentIndex === -1) {
       // Current URL not found, return first URL
       return res.json({ url: urls[0] });
@@ -102,20 +107,20 @@ app.get('/next', async (req, res) => {
 app.get('/previous', async (req, res) => {
   try {
     const currentUrl = req.query.current;
-    
+
     if (!currentUrl) {
       return res.status(400).json({ error: 'Missing required parameter: current' });
     }
 
     const urls = await fetchWebringUrls();
-    
+
     if (urls.length === 0) {
       return res.status(404).json({ error: 'No webring URLs available' });
     }
 
     // Find current URL in the list
     const currentIndex = urls.findIndex(url => url === currentUrl);
-    
+
     if (currentIndex === -1) {
       // Current URL not found, return last URL
       return res.json({ url: urls[urls.length - 1] });
@@ -136,7 +141,7 @@ app.get('/previous', async (req, res) => {
 app.get('/random', async (req, res) => {
   try {
     const urls = await fetchWebringUrls();
-    
+
     if (urls.length === 0) {
       return res.status(404).json({ error: 'No webring URLs available' });
     }
@@ -164,6 +169,35 @@ app.get('/list', async (req, res) => {
 });
 
 /**
+ * GET /pictures/list - Get all pictures in the pictures directory
+ */
+app.get('/pictures/list', (req, res) => {
+  try {
+    const picturesDir = path.join(__dirname, 'pictures');
+
+    if (!fs.existsSync(picturesDir)) {
+      return res.status(404).json({ error: 'Pictures directory not found' });
+    }
+
+    const files = fs.readdirSync(picturesDir);
+    const pictureFiles = files.filter(file => {
+      const ext = path.extname(file).toLowerCase();
+      return ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg'].includes(ext);
+    });
+
+    const pictures = pictureFiles.map(file => ({
+      filename: file,
+      url: `/pictures/${file}`
+    }));
+
+    res.json({ pictures, count: pictures.length });
+  } catch (error) {
+    console.error('Error in /pictures/list endpoint:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+/**
  * GET / - Health check and API info
  */
 app.get('/', (req, res) => {
@@ -174,7 +208,9 @@ app.get('/', (req, res) => {
       '/next': 'Get next webring URL (requires ?current=URL parameter)',
       '/previous': 'Get previous webring URL (requires ?current=URL parameter)',
       '/random': 'Get random webring URL',
-      '/list': 'Get all webring URLs'
+      '/list': 'Get all webring URLs',
+      '/pictures/:filename': 'Get a specific picture from the pictures directory',
+      '/pictures/list': 'Get all available pictures'
     }
   });
 });
