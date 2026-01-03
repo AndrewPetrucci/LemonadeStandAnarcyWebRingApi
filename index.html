@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lemonade Stand Anarchy WebRing</title>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', 'Arial', sans-serif;
+            background: linear-gradient(158deg, #FFF4B3 0%, #ffeb9900 60%), url(pictures/lemons.jpg);
+            background-repeat: no-repeat, repeat;
+            background-size: auto auto;
+            color: #333;
+            max-width: 800px;
+            min-width: 360px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #000000;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            color: #000000;
+            font-size: 1.5em;
+        }
+
+        .lemonade-stand {
+            background: url(pictures/Wood.jpg);
+            background-size: cover;
+            color: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin: 20px 0;
+        }
+
+        footer {
+            color: white;
+            font-size: 0.9em;
+            background: url(pictures/Wood.jpg);
+            background-size: cover;
+            padding: 20px;
+            border-radius: 15px;
+        }
+
+        #webring-nav-frame {
+            border: none;
+            width: 100%;
+            height: 120px;
+        }
+
+        .lemon {
+            font-size: 3em;
+        }
+
+        .character-images {
+            display: flex;
+            justify-content: space-around;
+            margin-top: -50px;
+            position: relative;
+            top: 43px;
+            z-index: -2;
+        }
+
+        .character-images img {
+            width: auto;
+            height: 150px;
+            position: relative;
+        }
+
+        .youtube-playlist {
+            width: 100%;
+            height: 500px;
+            border-radius: 15px;
+            margin: 0px 0 20px;
+            position: relative;
+            z-index: 5;
+        }
+
+
+        .webring-nav p {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .webring-link {
+            background: #FF6B6B;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: transform 0.2s;
+        }
+
+        .webring-link:hover {
+            transform: scale(1.1);
+            background: #FF5252;
+        }
+
+        .neon-sign {
+            color: #00ff00;
+            font-size: 2em;
+            font-weight: bold;
+            text-align: center;
+            text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00, 0 0 30px #00ff00, 0 0 40px #00ff00;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            margin: 0;
+            z-index: 10;
+            padding: 20px 40px;
+            background: rgba(0, 0, 0);
+            border: 3px solid #00ff00;
+            border-radius: 20px;
+            box-shadow: 0 0 20px #00ff00, inset 0 0 20px rgba(0, 255, 0, 0.2);
+            animation: neon-flicker 1.5s infinite;
+            pointer-events: none;
+        }
+
+        .neon-sign:first-of-type {
+            left: 0%;
+            top: 0%;
+            transform: translate(-50%, -50%) rotate(-15deg);
+        }
+
+        .neon-sign:nth-of-type(2) {
+            left: 88%;
+            top: 100%;
+            transform: translate(-50%, -50%) rotate(15deg);
+        }
+
+        .neon-spinner {
+            font-size: 3em;
+            font-weight: bold;
+            text-align: center;
+            z-index: 10;
+            position: absolute;
+            animation: spin 2s linear infinite;
+            pointer-events: none;
+        }
+
+        .neon-spinner:first-of-type {
+            right: 11.2%;
+            top: 36%;
+            transform: translate(-50%, -50%);
+        }
+
+        .neon-spinner:nth-of-type(2) {
+            right: 1.4%;
+            top: 36%;
+            transform: translate(50%, -50%);
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(360deg);
+            }
+
+            100% {
+                transform: rotate(0deg);
+            }
+        }
+
+        @keyframes neon-flicker {
+
+            0%,
+            18%,
+            22%,
+            25%,
+            53%,
+            57%,
+            100% {
+                text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00, 0 0 30px #00ff00, 0 0 40px #00ff00;
+            }
+
+            20%,
+            24%,
+            55% {
+                text-shadow: 0 0 5px #00ff00;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Lemonade Stand Anarchy WebRing</h1>
+    <h2>When life gives you lemons, start a Stand!</h2>
+
+    <div class="character-images">
+        <img class="atrioc"
+            src="https://raw.githubusercontent.com/AndrewPetrucci/LemonadeStandAnarcyWebRing/main/pictures/_Atrioc.png"
+            alt="Atrioc">
+        <img class="aiden"
+            src="https://raw.githubusercontent.com/AndrewPetrucci/LemonadeStandAnarcyWebRing/main/pictures/_Aiden.png"
+            alt="Aiden">
+        <img class="doug"
+            src="https://raw.githubusercontent.com/AndrewPetrucci/LemonadeStandAnarcyWebRing/main/pictures/_Doug.png"
+            alt="Doug">
+    </div>
+
+    <div class="lemonade-stand">
+        <p>Welcome to the Lemonade Stand Anarchy WebRing - where entrepreneurial spirit meets grassroots community!</p>
+        <p>This is a community celebrating independent lemonade stands, DIY culture, and freedom from corporate beverage
+            overlords.</p>
+
+        <h3>🌟 Join the Movement 🌟</h3>
+        <p>Whether you're selling lemonade on the corner, crafting artisanal beverages, or just believe in the power of
+            small business, you belong here!</p>
+    </div>
+
+    <div style="position: relative;">
+        <h2 class="neon-sign">Latest Episode</h2>
+        <!-- <h2 class="neon-sign">Watch Now</h2> -->
+        <div class="neon-spinner">🌀</div>
+        <div class="neon-spinner">🌀</div>
+
+        <iframe class="youtube-playlist"
+            src="https://www.youtube.com/embed/videoseries?list=PLYkjTdVaDaTDv86TQEWq8EDG3iIqoj3em"
+            title="Lemonade Stand Anarchy WebRing Playlist" allowfullscreen=""
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share">
+        </iframe>
+    </div>
+
+
+    <footer>
+        <div class="webring-nav">
+            <p>
+                <a href="/api/previous" class="webring-link">← Previous Stand</a>
+                <a href="/api/next" class="webring-link">Next Stand →</a>
+            </p>
+            <p>
+                <a href="/api/random" class="webring-link">Random Stand</a>
+            </p>
+        </div>
+        <p>🍋 Powered by pure sugar, water, and rebellion 🍋</p>
+        <p>Part of the decentralized web revolution</p>
+        <p>By the stans, for the stans</p>
+
+        <p> <a href="https://github.com/andrewpetrucci/LemonadeStandAnarcyWebRing">Project Github</a>
+        </p>
+    </footer>
+
+    <script>
+        // Hide spinners on clicks
+        const spinners = document.querySelectorAll('.neon-spinner');
+        const videoFrame = document.querySelector('.youtube-playlist');
+        const neonSigns = document.querySelectorAll('.neon-sign');
+
+        console.log('Found spinners:', spinners.length);
+        console.log('Found video frame:', videoFrame);
+        console.log('Found neon signs:', neonSigns.length);
+
+        // Hide spinners when hovering/touching video
+        function hideSpinnersAndSigns() {
+            console.log('Video interacted with - hiding spinners');
+            spinners.forEach(spinner => spinner.style.display = 'none');
+            neonSigns.forEach(sign => sign.style.zIndex = '1');
+        }
+
+
+        // Mouse events
+        videoFrame.addEventListener('mouseenter', hideSpinnersAndSigns);
+
+        // Touch events for mobile
+        videoFrame.addEventListener('touchstart', hideSpinnersAndSigns);
+
+
+    </script>
+</body>
+
+</html>
